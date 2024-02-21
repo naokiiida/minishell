@@ -1,5 +1,5 @@
-# 42template
-Nth project for 42cursus
+# Minishell
+8th project for 42cursus
 
 ## 機能
 
@@ -55,11 +55,11 @@ strerror, perror, isatty, ttyname, ttyslot, ioctl,
 getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 
-Build GNU readline from source on macOS
+macOS環境にGNU readlineをソースからコンパイル
 - [GNU readline](https://tiswww.case.edu/php/chet/readline/rltop.html)
 	- [Download version 8.2 stable](https://git.savannah.gnu.org/cgit/readline.git?h=devel)
 
-macOS環境にGNU readlineをソースからコンパイル
+root権限なしでインストールしたい場合、configure時prefixで指定
 ```bash
 curl -O ftp://ftp.cwru.edu/pub/bash/readline-8.2.tar.gz
 tar -xvf readline-8.2.tar.gz
@@ -68,11 +68,13 @@ tar -xvf readline-8.2.tar.gz
 # gpg --verify readline-8.2.tar.gz.sig readline-8.2.tar.gz
 cd readline-8.2
 # インストール場所をサブディレクトリに指定
-./configure —prefix=$HOME
+./configure —prefix=<サブディレクトリの絶対パス>
 make
 make install
-# add to ~/.bashrc or some other shell configuration file
-export MANPATH="`manpath`:$HOME/share/man"
+# manページを~/.zshrcなどシェルの設定ファイルに環境変数として指定
+export MANPATH="`manpath`:<サブディレクトリの絶対パス>/share/man"
+man 3 readline
+man 3 history
 ```
 
 > [!NOTE]
