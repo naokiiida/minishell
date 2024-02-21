@@ -53,3 +53,11 @@ dkms.conf
 
 # macOS
 .DS_Store
+
+# Vim
+*.swp
+
+# Project files
+readline-readline-8.2/
+ext/
+minishell

@@ -1,14 +1,16 @@
-NAME :=
+NAME := minishell
 
 SDIR := src/
 ODIR := obj/
-IDIR := inc
+IDIR := inc/
+LDIR := ext/lib/
+LINC := ext/include/readline
 SRCS := main.c 
 OBJS := $(SRCS:%.c=$(ODIR)%.o)
-INCS = -I$(IDIR)
+INCS = -I$(IDIR) -I$(LINC)
 DEPS = $(patsubst %.o,%.d, $(OBJS))
 DEPFLAGS := -MMD -MP
-LDFLAGS := -l
+LDFLAGS := -L$(LDIR) -lhistory -L$(LDIR) -lreadline -DREADLINE_LIBRARY
 CFLAGS = -Wall -Wextra -Werror $(DEPFLAGS)
 CC := cc
 MKDIR := mkdir -p
