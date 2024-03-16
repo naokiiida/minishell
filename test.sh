@@ -25,4 +25,5 @@ assert_bash() {
 	fi
 	echo
 }
-assert_bash ''
+#assert_bash ''
+assert_bash '/bin/ls'
