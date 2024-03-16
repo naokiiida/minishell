@@ -5,7 +5,7 @@ ODIR := obj/
 IDIR := inc/
 LDIR := ext/lib/
 LINC := ext/include/readline
-SRCS := main.c
+SRCS := readline_loop.c
 OBJS := $(SRCS:%.c=$(ODIR)%.o)
 INCS = -DREADLINE_LIBRARY -I$(IDIR) -I$(LINC)
 DEPS = $(patsubst %.o,%.d, $(OBJS))
