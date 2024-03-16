@@ -5,12 +5,12 @@ ODIR := obj/
 IDIR := inc/
 LDIR := ext/lib/
 LINC := ext/include/readline
-SRCS := main.c 
+SRCS := main.c
 OBJS := $(SRCS:%.c=$(ODIR)%.o)
-INCS = -I$(IDIR) -I$(LINC)
+INCS = -DREADLINE_LIBRARY -I$(IDIR) -I$(LINC)
 DEPS = $(patsubst %.o,%.d, $(OBJS))
 DEPFLAGS := -MMD -MP
-LDFLAGS := -L$(LDIR) -lhistory -L$(LDIR) -lreadline -DREADLINE_LIBRARY
+LDFLAGS := -L$(LDIR) -lhistory -L$(LDIR) -lreadline
 CFLAGS = -Wall -Wextra -Werror $(DEPFLAGS)
 CC := cc
 MKDIR := mkdir -p
