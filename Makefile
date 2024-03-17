@@ -35,8 +35,6 @@ ifeq ($(OS), Darwin)
 	CFLAGS += -D__Apple__
 endif
 
-all: $(NAME)
-
 $(NAME): $(OBJS) | $(ODIR)
 	@make -C $(LIBFT)
 	$(CC) $(CFLAGS) -o $(NAME) $^ $(LDFLAGS)
@@ -47,6 +45,8 @@ $(ODIR)%.o:$(SDIR)%.c | $(ODIR)
 $(ODIR):
 	@echo "Creating directory: $(ODIR)"
 	$(MKDIR) $@
+
+all: $(NAME)
 
 clean:
 	@make $@ -C $(LIBFT)
