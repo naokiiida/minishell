@@ -1,16 +1,17 @@
 NAME := minishell
 
+LIBFT = ../libft
 SDIR := src/
 ODIR := obj/
 IDIR := inc/
 LDIR := ext/lib/
 LINC := ext/include/readline
-SRCS := readline_loop.c
+SRCS := main.c
 OBJS := $(SRCS:%.c=$(ODIR)%.o)
-INCS = -DREADLINE_LIBRARY -I$(IDIR) -I$(LINC)
+INCS = -DREADLINE_LIBRARY -I$(IDIR) -I$(LINC) -I$(LIBFT)
 DEPS = $(patsubst %.o,%.d, $(OBJS))
 DEPFLAGS := -MMD -MP
-LDFLAGS := -L$(LDIR) -lhistory -L$(LDIR) -lreadline
+LDFLAGS := -L$(LDIR) -lhistory -L$(LDIR) -lreadline -L$(LIBFT) -lft
 CFLAGS = -Wall -Wextra -Werror $(DEPFLAGS)
 CC := cc
 MKDIR := mkdir -p
@@ -37,6 +38,7 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJS) | $(ODIR)
+	@make -C $(LIBFT)
 	$(CC) $(CFLAGS) -o $(NAME) $^ $(LDFLAGS)
 
 $(ODIR)%.o:$(SDIR)%.c | $(ODIR)
@@ -47,9 +49,11 @@ $(ODIR):
 	$(MKDIR) $@
 
 clean:
+	@make $@ -C $(LIBFT)
 	rm -rf $(ODIR)
 
 fclean: clean
+	@make $@ -C $(LIBFT)
 	rm -f $(NAME)
 	rm -rf $(NAME).dSYM
 

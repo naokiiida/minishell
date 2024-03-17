@@ -27,3 +27,6 @@ assert_bash() {
 }
 #assert_bash ''
 assert_bash '/bin/ls'
+assert_bash 'ls'
+
+assert 'invalid_command'
