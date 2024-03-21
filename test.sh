@@ -28,5 +28,10 @@ assert_bash() {
 #assert_bash ''
 assert_bash '/bin/ls'
 assert_bash 'ls'
+assert_bash 'echo hello'
+assert_bash 'echo hello   world'
+assert_bash 'echo hello world;'
+assert_bash 'echo "hello world!"'
+assert_bash 'echo "(hello world)"'
 
 assert_bash 'invalid_command'
