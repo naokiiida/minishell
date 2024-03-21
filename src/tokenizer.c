@@ -1,95 +1,128 @@
-//#include "token.h"
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <ctype.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: niida <niida@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/17 15:18:56 by niida             #+#    #+#             */
+/*   Updated: 2024/03/21 18:54:40 by niida            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_token {
-	char *name;
-	int value;
-	struct s_token *next;
-}	t_token;
+#include "minishell.h"
 
-typedef enum {
+typedef enum s_type
+{
 	NONE,
 	BLANK,
 	IDENTIFIER,
 	OP,
 	RESERVED,
-}	t_type;
+}			t_type;
 
-void lst_add(t_token *node, t_token *new)
+typedef struct s_token
 {
-	while (node)
-		node = node->next;
-	node->next = new;
-}
-
-t_token	*lst_new(char *name)
-{
-	t_token	*node;
-
-	node = malloc(sizeof(t_token));
-	if (!node)
-		return (NULL);
-	node->name = name;
-	node->value = 0;
-	node->next = NULL;
-	return (node);
-}
-
-//split word and blank from a string into tokens
-t_token *tokenize(char *s)
-{
+	char	*start;
+	size_t	len;
 	t_type	type;
-	t_token	*token;
-	t_token	*head;
+	char	*next;
+}			t_token;
 
-	type = NONE;
-	token = lst_new(s);
-	head = token;
-	while (*s)
+int	is_metacharacter(int c)
+{
+	return (strchr("|&; 	", c));
+}
+
+int	is_blank(int c)
+{
+	return ( c == ' ' || c == '\t');
+}
+
+int	is_quote(int c)
+{
+	return (strchr("()<>", c));
+}
+
+int	is_op(char *c)
+{
+	static char	op[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n"};
+
+	while (*op)
 	{
-		if (isspace(*s))
+		if (strncmp());
+	}
+	return ();
+}
+
+int	is_identifier(char *c)
+{
+	return (isalnum(*c) || *c == '_');
+}
+
+t_token *lst_new(char *s)
+{
+	t_token	*word;
+
+	word = malloc(sizeof(*word));
+	word->start = s;
+	word->len = 0;
+	word->type = BLANK;
+	word->next = NULL;
+}
+
+void	lst_add(t_token *lst, t_token *new)
+{
+	if (!lst)
+		return (NULL);
+	while (lst)
+		lst = lst->next;
+	lst->next = new;
+}
+
+//if is_quote, wait for close quote pair
+//{{'(', ')'}, {'<', '>'}, '"', '\''}
+//
+/*
+ * 1. flag metacharacter.
+ * 2. close quoting metacharacter "" '' ()
+ * 3. implement tokenize error handling, such as unclosed metacharacter
+ * 4. expand metacharacter, remove metacharacter and create new node
+ */
+char	**tokenize(char *line)
+{
+	char	*c;
+	t_token	*word;
+	bool	quote_open;
+
+	c = line;
+	quote_open = false;
+	while (*c)
+	{
+		if (is_quote(c))
 		{
-			type = BLANK;
+			++word->len;
+			if (quote_open)
+				quote_open = false;
+			else
+			{
+				quote_open = true;
+				tokenize(++c);
+			}
 		}
-		else if (type == BLANK)
+		else if (is_metacharacter(*c))
 		{
-			assert(token->value == 6);
-			token->next = lst_new(s);
-			token = token->next;
-			++token->value;
-			type = IDENTIFIER;
+			word->type = BLANK;
+		}
+		else if (word->type == BLANK)
+		{
+			word = lst_new(c);
+			word->type = IDENTIFIER;
+			++word->len;
 		}
 		else
-		{
-			++token->value;
-			type = IDENTIFIER;
-		}
-		//printf("[%d]%c\ttype:%d\n", token->value, *s, type);
-		++s;
+			++word->len;
+		++c;
 	}
-	assert(token->value == 5);
-	return (head);
-}
-
-int	main(void)
-{
-	char *str = "hello, 	world";
-	t_token	*lst_tok;
-
-	printf("strlen:%zu\n", strlen(str));
-	lst_tok = tokenize(str);
-	write(1, "\n", 1);
-	while (lst_tok != NULL)
-	{
-		write(1, "print:", 6);
-		write(1, lst_tok->name, lst_tok->value);
-		write(1, "\n", 1);
-		lst_tok = lst_tok->next;
-	};
-	return (0);
+	return (token);
 }
